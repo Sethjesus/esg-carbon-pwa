@@ -135,6 +135,11 @@
             document.getElementById('result').innerHTML = details;
             document.getElementById('totalEmission').innerHTML = `<h3>🌍 總碳排放量：${totalCarbon.toFixed(2)} kg CO₂</h3>`;
         }
+         if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker 註冊成功'))
+      .catch((error) => console.log('Service Worker 註冊失敗:', error));
+  }
     </script>
 </body>
 </html>
