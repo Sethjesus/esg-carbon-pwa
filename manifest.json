@@ -1,6 +1,6 @@
 {
   "name": "景沛ESG 碳排放計算器",
-  "short_name": "碳排放計算",
+  "short_name": "碳排放",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
