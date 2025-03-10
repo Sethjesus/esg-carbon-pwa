@@ -9,7 +9,6 @@
     <link rel="icon" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-    <link rel="manifest" href="manifest.json">
 
     <style>
         body {
@@ -139,11 +138,43 @@
             document.getElementById('result').innerHTML = details;
             document.getElementById('totalEmission').innerHTML = `<h3>🌍 總碳排放量：${totalCarbon.toFixed(2)} kg CO₂</h3>`;
         }
-         if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(() => console.log('Service Worker 註冊成功'))
-      .catch((error) => console.log('Service Worker 註冊失敗:', error));
-  }
+
+        // PWA Installation
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the A2HS prompt');
+                    } else {
+                        console.log('User dismissed the A2HS prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // Copy URL to clipboard
+        document.getElementById('copyUrlBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('URL 已複製到剪貼簿');
+            }).catch((error) => {
+                console.error('Failed to copy URL:', error);
+            });
+        });
+
+        // Service Worker registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => console.log('Service Worker 註冊成功'))
+                .catch((error) => console.log('Service Worker 註冊失敗:', error));
+        }
     </script>
 </body>
 </html>
