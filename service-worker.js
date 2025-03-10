@@ -1,11 +1,11 @@
 const CACHE_NAME = "esg-carbon-pwa-v2";
 const urlsToCache = [
-  "/esg-carbon-pwa/",
-  "/esg-carbon-pwa/index.html",
-  "/esg-carbon-pwa/styles.css",
-  "/esg-carbon-pwa/manifest.json",
-  "/esg-carbon-pwa/icon-192.png",
-  "/esg-carbon-pwa/icon-512.png"
+  "/ESG-Carbon-PWA/",
+  "/ESG-Carbon-PWA/index.html",
+  "/ESG-Carbon-PWA/styles.css",
+  "/ESG-Carbon-PWA/manifest.json",
+  "/ESG-Carbon-PWA/icon-192.png",
+  "/ESG-Carbon-PWA/icon-512.png"
 ];
 
 // Install Service Worker and cache resources
@@ -27,7 +27,7 @@ self.addEventListener("fetch", (event) => {
         fetch(event.request).then((networkResponse) => {
           return networkResponse;
         }).catch(() => {
-          return caches.match("/esg-carbon-pwa/index.html");
+          return caches.match("/ESG-Carbon-PWA/index.html");
         })
       );
     })
