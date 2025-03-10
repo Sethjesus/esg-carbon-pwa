@@ -144,6 +144,7 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            document.querySelector('.download-btn').style.display = 'block'; // Show the install button
         });
 
         function installPWA() {
