@@ -118,6 +118,7 @@
         <div class="footer">
             <button class="download-btn" onclick="installPWA()">📥 下載應用程式</button>
             <button id="copyUrlBtn">📋 長按複製網址</button>
+            <button onclick="clearCache()">🧹 清除緩存</button>
             <p><a href="https://jpesg.netlify.app/" target="_blank">🏡 返回景沛 ESG 首頁</a></p>
             <p><a href="https://data.moenv.gov.tw/dataset/detail/CFP_P_02" target="_blank">📄 碳排放參考資料 (環境部)</a></p>
         </div>
@@ -170,10 +171,25 @@
             });
         });
 
+        // Clear Cache
+        function clearCache() {
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({ action: 'clearCache' });
+            }
+        }
+
         // Service Worker registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/ESG-Carbon-PWA/service-worker.js')
-                .then(() => console.log('Service Worker 註冊成功'))
+                .then((registration) => {
+                    console.log('Service Worker 註冊成功', registration);
+                    // Listen for messages from the service worker
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        if (event.data.action === 'cacheCleared') {
+                            alert('緩存已清除');
+                        }
+                    });
+                })
                 .catch((error) => console.log('Service Worker 註冊失敗:', error));
         }
     </script>
