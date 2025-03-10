@@ -1,11 +1,10 @@
 const CACHE_NAME = "esg-carbon-pwa-v2";
 const urlsToCache = [
-  "/ESG-Carbon-PWA/",
-  "/ESG-Carbon-PWA/index.html",
-  "/ESG-Carbon-PWA/styles.css",
-  "/ESG-Carbon-PWA/manifest.json",
-  "/ESG-Carbon-PWA/icon-192.png",
-  "/ESG-Carbon-PWA/icon-512.png"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
 // Install Service Worker and cache resources
@@ -27,7 +26,7 @@ self.addEventListener("fetch", (event) => {
         fetch(event.request).then((networkResponse) => {
           return networkResponse;
         }).catch(() => {
-          return caches.match("/ESG-Carbon-PWA/index.html");
+          return caches.match("./index.html");
         })
       );
     })
@@ -49,4 +48,19 @@ self.addEventListener("activate", (event) => {
     })
   );
   self.clients.claim();
+});
+
+// Listen for messages to clear cache
+self.addEventListener('message', (event) => {
+  if (event.data.action === 'clearCache') {
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          return caches.delete(cacheName);
+        })
+      ).then(() => {
+        event.ports[0].postMessage({ action: 'cacheCleared' });
+      });
+    });
+  }
 });
