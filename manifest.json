@@ -1,7 +1,7 @@
 {
   "name": "景沛ESG 碳排放計算器",
   "short_name": "碳排放計算器",
-  "start_url": "/index.html",
+  "start_url": "/esg-carbon-pwa/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
