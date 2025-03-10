@@ -36,11 +36,12 @@ self.addEventListener("fetch", (event) => {
 
 // Clean up old caches
 self.addEventListener("activate", (event) => {
+  const cacheWhitelist = [CACHE_NAME]; // List of caches to keep
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
+          if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName);
           }
         })
