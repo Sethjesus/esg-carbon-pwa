@@ -1,4 +1,4 @@
-const CACHE_NAME = "esg-carbon-pwa-v2"; // 改變版本號以清除舊緩存
+const CACHE_NAME = "esg-carbon-pwa-v2";
 const urlsToCache = [
   "/",
   "/index.html",
@@ -8,9 +8,9 @@ const urlsToCache = [
   "/icon-512.png"
 ];
 
-// 安裝 Service Worker 並緩存資源
+// Install Service Worker and cache resources
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // 安裝後立刻啟用新的 Service Worker
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
@@ -18,7 +18,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// 攔截請求並嘗試從緩存中回應
+// Intercept requests and serve from cache
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
@@ -27,14 +27,14 @@ self.addEventListener("fetch", (event) => {
         fetch(event.request).then((networkResponse) => {
           return networkResponse;
         }).catch(() => {
-          return caches.match("/index.html"); // 如果請求失敗，回應 index.html
+          return caches.match("/index.html");
         })
       );
     })
   );
 });
 
-// 清理舊緩存
+// Clean up old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -47,5 +47,5 @@ self.addEventListener("activate", (event) => {
       );
     })
   );
-  self.clients.claim(); // 立即取得控制權
+  self.clients.claim();
 });
