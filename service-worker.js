@@ -1,4 +1,4 @@
-const CACHE_NAME = "esg-carbon-pwa-v2"; // 更改版本號以強制更新快取
+const CACHE_NAME = "esg-carbon-pwa-v2"; // 改變版本號以清除舊緩存
 const urlsToCache = [
   "/",
   "/index.html",
@@ -8,9 +8,9 @@ const urlsToCache = [
   "/icon-512.png"
 ];
 
-// 安裝 Service Worker 並快取必要資源
+// 安裝 Service Worker 並緩存資源
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // 立即啟用新版本的 Service Worker
+  self.skipWaiting(); // 安裝後立刻啟用新的 Service Worker
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
@@ -18,23 +18,23 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// 監聽 fetch 事件，提供離線支援與動態請求處理
+// 攔截請求並嘗試從緩存中回應
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       return (
-        response || 
-        fetch(event.request)
-          .then((networkResponse) => {
-            return networkResponse;
-          })
-          .catch(() => caches.match("/index.html")) // 如果請求失敗，提供離線畫面
+        response ||
+        fetch(event.request).then((networkResponse) => {
+          return networkResponse;
+        }).catch(() => {
+          return caches.match("/index.html"); // 如果請求失敗，回應 index.html
+        })
       );
     })
   );
 });
 
-// 當新的 Service Worker 啟動時，清除舊的快取
+// 清理舊緩存
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -47,5 +47,5 @@ self.addEventListener("activate", (event) => {
       );
     })
   );
-  self.clients.claim(); // 立即讓新的 Service Worker 接管控制
+  self.clients.claim(); // 立即取得控制權
 });
